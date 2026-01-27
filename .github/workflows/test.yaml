@@ -54,6 +54,7 @@ jobs:
       - name: Run tests
         run: |
           julia --project=. -e 'using Pkg; Pkg.instantiate()'
+          rm -rf ~/.julia/compiled/v*  # Clear all precompiled cache
           julia test/runtests.jl
       
       - name: Upload test results
