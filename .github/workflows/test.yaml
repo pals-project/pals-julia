@@ -1,0 +1,74 @@
+name: Julia Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        julia-version: ['1.12', '1.11', 'nightly']
+        os: [ubuntu-latest, macOS-latest]
+        exclude:
+          # Optionally exclude certain combinations
+          - os: macOS-latest
+            julia-version: nightly
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.julia-version }}
+      
+      - name: Install system dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+      
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake
+      
+      - name: Build C++ library
+        run: |
+          cd pals-cpp
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+      
+      - name: Verify shared library
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            ls -la pals-cpp/build/*.so || echo "No .so files found"
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            ls -la pals-cpp/build/*.dylib || echo "No .dylib files found"
+          fi
+        shell: bash
+      
+      - name: Run tests
+        run: |
+          cd pals-julia
+          julia --project=. -e 'using Pkg; Pkg.instantiate()'
+          julia test/runtests.jl
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.os }}-julia-${{ matrix.julia-version }}
+          path: |
+            pals-julia/test/*.log
+            pals-julia/*.yaml
