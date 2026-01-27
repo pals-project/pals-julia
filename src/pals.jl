@@ -7,7 +7,7 @@ Represents a YAML document node that can be a scalar, map, or sequence.
 
 """
 
-const LIBYAML = joinpath(@__DIR__, "..", "..", "pals-cpp", "build", "libyaml_c_wrapper.dylib")
+include(joinpath(@__DIR__, "library_path.jl"))
 
 # Opaque handle type
 mutable struct YAMLNode
@@ -58,7 +58,17 @@ function parse_yaml(yaml_str::String)
 end
 
 function parse_file(filename::String)
+    # Check if file exists first
+    if !isfile(filename)
+        error("File not found: $filename")
+    end
+    
     handle = @ccall LIBYAML.yaml_parse_file(filename::Cstring)::Ptr{Cvoid}
+    
+    if handle == C_NULL
+        error("Failed to parse YAML file: $filename (C library returned NULL)")
+    end
+    
     return YAMLNode(handle)
 end
 
