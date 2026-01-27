@@ -7,9 +7,10 @@ Represents a YAML document node that can be a scalar, map, or sequence.
 
 """
 
-const LIBYAML = Ref{String}()
+LIBYAML = ""
 
 function __init__()
+    global LIBYAML
     base_path = joinpath(@__DIR__, "..", "..", "pals-cpp", "build")
     
     # Determine library name based on OS
@@ -38,7 +39,7 @@ function __init__()
         """)
     end
     
-    LIBYAML[] = lib_path
+    LIBYAML = lib_path
 end
 
 # Opaque handle type
