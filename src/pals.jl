@@ -7,8 +7,40 @@ Represents a YAML document node that can be a scalar, map, or sequence.
 
 """
 
-include(joinpath(@__DIR__, "library_path.jl"))
+# Cross-platform library path resolution
+function get_library_path()
+    base_path = joinpath(@__DIR__, "..", "..", "pals-cpp", "build")
+    
+    # Determine library name based on OS
+    if Sys.isapple()
+        lib_name = "libyaml_c_wrapper.dylib"
+    elseif Sys.islinux()
+        lib_name = "libyaml_c_wrapper.so"
+    elseif Sys.iswindows()
+        lib_name = "libyaml_c_wrapper.dll"
+    else
+        error("Unsupported operating system")
+    end
+    
+    lib_path = joinpath(base_path, lib_name)
+    
+    # Verify the library exists
+    if !isfile(lib_path)
+        error("""
+        Library not found: $lib_path
+        Please build the C++ library first:
+        cd pals-cpp
+        mkdir -p build
+        cd build
+        cmake ..
+        make
+        """)
+    end
+    
+    return lib_path
+end
 
+const LIBYAML = get_library_path()
 # Opaque handle type
 mutable struct YAMLNode
     handle::Ptr{Cvoid}
