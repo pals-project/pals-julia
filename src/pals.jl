@@ -11,7 +11,7 @@ LIBYAML = ""
 
 function __init__()
     global LIBYAML
-    base_path = joinpath(@__DIR__, "..", "..", "pals-cpp", "build")
+    base_path = joinpath(@__DIR__, "..", "pals-cpp", "build")  # Only one ../ instead of two
     
     # Determine library name based on OS
     if Sys.isapple()
