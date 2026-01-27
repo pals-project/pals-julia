@@ -2,7 +2,7 @@ name: Julia Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -14,19 +14,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        julia-version: ['1.11', '1.12', 'nightly']
+        julia-version: ['1.11', '1.12']
         os: [ubuntu-latest]
     
     steps:
-      - name: Checkout repository
+      - name: Checkout pals-julia repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Checkout pals-cpp repository
         uses: actions/checkout@v4
         with:
-          repository: pals-project/pals-cpp  # Replace with actual repo path
+          repository: pals-project/pals-cpp 
           path: pals-cpp
       
       - name: Setup Julia
