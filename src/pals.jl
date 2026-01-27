@@ -7,8 +7,9 @@ Represents a YAML document node that can be a scalar, map, or sequence.
 
 """
 
-# Cross-platform library path resolution
-function get_library_path()
+const LIBYAML = Ref{String}()
+
+function __init__()
     base_path = joinpath(@__DIR__, "..", "..", "pals-cpp", "build")
     
     # Determine library name based on OS
@@ -37,10 +38,9 @@ function get_library_path()
         """)
     end
     
-    return lib_path
+    LIBYAML[] = lib_path
 end
 
-const LIBYAML = get_library_path()
 # Opaque handle type
 mutable struct YAMLNode
     handle::Ptr{Cvoid}
