@@ -17,45 +17,56 @@ jobs:
         julia-version: ['1.11', '1.12']
         os: [ubuntu-latest]
     
-    steps:
-      - name: Checkout pals-julia repository
-        uses: actions/checkout@v4
+steps:
+  - name: Checkout pals-julia repository
+    uses: actions/checkout@v4
 
-      - name: Checkout pals-cpp repository
-        uses: actions/checkout@v4
-        with:
-          repository: pals-project/pals-cpp 
-          path: pals-cpp
-      
-      - name: Setup Julia
-        uses: julia-actions/setup-julia@v1
-        with:
-          version: ${{ matrix.julia-version }}
-      
-      - name: Install system dependencies (Ubuntu)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake build-essential
-      
-      - name: Build C++ library
-        run: |
-          cd pals-cpp
-          mkdir -p build
-          cd build
-          cmake ..
-          make
-      
-      - name: Verify shared library
-        run: |
-            ls -la pals-cpp/build/*.so || echo "No .so files found"
-        shell: bash
-      
-      - name: Run tests
-        run: |
-          julia --project=. -e 'using Pkg; Pkg.instantiate()'
-          rm -rf ~/.julia/compiled/v*  # Clear all precompiled cache
-          julia test/runtests.jl
+  - name: Checkout pals-cpp repository
+    uses: actions/checkout@v4
+    with:
+      repository: pals-project/pals-cpp
+      path: pals-cpp  # Checkout as sibling, not ../pals-cpp
+
+  - name: Setup Julia
+    uses: julia-actions/setup-julia@v1
+    with:
+      version: ${{ matrix.julia-version }}
+
+  - name: Install system dependencies (Ubuntu)
+    if: runner.os == 'Linux'
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y cmake build-essential libyaml-dev
+
+  - name: Install system dependencies (macOS)
+    if: runner.os == 'macOS'
+    run: |
+      brew install cmake yaml-cpp
+
+  - name: Build C++ library
+    run: |
+      cd pals-cpp
+      mkdir -p build
+      cd build
+      cmake ..
+      make -j$(nproc 2>/dev/null || echo 2)
+      ls -lah
+    shell: bash
+
+  - name: Verify library exists
+    run: |
+      if [ "$RUNNER_OS" == "Linux" ]; then
+        ls -la pals-cpp/build/libyaml_c_wrapper.so
+      elif [ "$RUNNER_OS" == "macOS" ]; then
+        ls -la pals-cpp/build/libyaml_c_wrapper.dylib
+      fi
+    shell: bash
+
+  - name: Run tests
+    run: |
+      julia --project=. -e 'using Pkg; Pkg.instantiate()'
+      rm -rf ~/.julia/compiled/v*
+      julia test/runtests.jl
       
       - name: Upload test results
         if: always()
