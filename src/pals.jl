@@ -15,7 +15,7 @@ using Libdl
 const LIBYAML = Ref{Ptr{Cvoid}}(C_NULL)
 
 function __init__()
-    base_path = joinpath(@__DIR__, "..", "pals-cpp", "build")
+    base_path = joinpath(@__DIR__, "../..", "pals-cpp", "build")
 
     lib_name =
         Sys.isapple()   ? "libyaml_c_wrapper.dylib" :
