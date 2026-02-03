@@ -6,7 +6,7 @@ A Julia wrapper around yaml-cpp's YAML::Node.
 
 module PALS
 
-using Libdl
+using Libdl 
 
 # -----------------------------
 # Library loading (CORRECT WAY)
