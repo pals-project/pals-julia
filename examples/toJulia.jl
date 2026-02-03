@@ -1,7 +1,7 @@
 include("../src/pals.jl")
 
 #reading a lattice from a yaml file
-yaml_file = abspath(joinpath(@__DIR__, "..", "lattice_files", "ex.yaml"))
+yaml_file = abspath(joinpath(@__DIR__, "..", "lattice_files", "ex.pals.yaml"))
 node = parse_file(yaml_file)
 #printing to terminal
 println(to_yaml_string(node))
@@ -32,6 +32,6 @@ set_at_index!(sequence, 1, scalar)
 push!(node, map)
 push!(node, sequence)
 
-#writing modified lattice file to expand.yaml
-file_dest = abspath(joinpath(@__DIR__, "..", "lattice_files", "expand.yaml"))
+#writing modified lattice file to expand.pals.yaml
+file_dest = abspath(joinpath(@__DIR__, "..", "lattice_files", "expand.pals.yaml"))
 write_yaml(node, file_dest)
