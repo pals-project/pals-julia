@@ -30,5 +30,5 @@ port = Int(config["server"]["port"])     # 8080
 # Create YAML
 new_config = create_map()
 new_config["name"] = "MyApp"
-write_yaml(new_config, "config.yaml")
+write_yaml(new_config, "config.pals.yaml")
 ```
