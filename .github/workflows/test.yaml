@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         julia-version: ['1.11', '1.12']
-        os: [ubuntu-latest]
+        os: [macos-latest]
     
     steps: 
       - name: Checkout pals-julia repository
@@ -51,15 +51,6 @@ jobs:
           cmake ..
           make -j$(nproc 2>/dev/null || echo 2)
           ls -lah
-        shell: bash
-
-      - name: Verify library exists
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            ls -la pals-cpp/build/libyaml_c_wrapper.so
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            ls -la pals-cpp/build/libyaml_c_wrapper.dylib
-          fi
         shell: bash
 
       - name: Run tests
