@@ -7,7 +7,7 @@ Represents a YAML document node that can be a scalar, map, or sequence.
 
 """
 
-const LIBYAML = joinpath(@__DIR__, "..", "..", "pals-cpp", "build", "libyaml_c_wrapper.dylib")
+const LIBYAML = joinpath(@__DIR__, "..", "..", "..", "pals-cpp", "build", "libyaml_c_wrapper.dylib")
 
 # Opaque handle type
 mutable struct YAMLNode
