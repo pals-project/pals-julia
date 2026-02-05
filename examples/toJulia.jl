@@ -11,7 +11,7 @@ println((is_sequence(node)))
 
 #accessing sequence
 seq = getindex(node, 1)
-println("the first element is:", to_yaml_string(seq))
+println("the first element is: \n", to_yaml_string(seq))
 
 #accessing map
 println("the value at key 'thingB' is: ", to_yaml_string(getindex(seq, "thingB")))

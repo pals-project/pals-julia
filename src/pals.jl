@@ -58,7 +58,17 @@ function parse_yaml(yaml_str::String)
 end
 
 function parse_file(filename::String)
+    # Check if file exists first
+    if !isfile(filename)
+        error("File not found: $filename")
+    end
+    
     handle = @ccall LIBYAML.yaml_parse_file(filename::Cstring)::Ptr{Cvoid}
+    
+    if handle == C_NULL
+        error("Failed to parse YAML file: $filename (C library returned NULL)")
+    end
+    
     return YAMLNode(handle)
 end
 
