@@ -20,6 +20,9 @@ jobs:
     steps: 
       - name: Checkout pals-julia repository
         uses: actions/checkout@v4
+        with:
+          path: pals-julia
+
 
       - name: Checkout pals-cpp repository
         uses: actions/checkout@v4
