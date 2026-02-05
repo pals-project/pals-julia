@@ -58,9 +58,14 @@ jobs:
 
       - name: Run tests
         run: |
-          julia --project=. -e 'using Pkg; Pkg.instantiate()'
-          rm -rf ~/.julia/compiled/v*
-          julia test/runtests.jl
+          cd $GITHUB_WORKSPACE/pals-julia
+
+          julia --project=. -e '
+            using Pkg
+            Pkg.instantiate()
+            Pkg.test()
+          '
+
           
       - name: Upload test results 
         if: always()
