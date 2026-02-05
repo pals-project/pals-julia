@@ -7,6 +7,8 @@ Represents a YAML document node that can be a scalar, map, or sequence.
 
 """
 
+module pals
+
 const LIBYAML = Ref{String}()
 
 function __init__()
@@ -288,4 +290,6 @@ end
 function yaml_expand(node::YAMLNode)
     handle = @ccall LIBYAML[].yaml_expand(node.handle::Ptr{Cvoid})::Ptr{Cvoid}
     return YAMLNode(handle)
+end
+
 end
