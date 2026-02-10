@@ -27,4 +27,4 @@ Manifest*.toml
 LocalPreferences.toml
 JuliaLocalPreferences.toml
 
-lattice_files/expand.yaml
+lattice_files/expand.pals.yaml
