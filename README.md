@@ -1,6 +1,6 @@
 ## Introduction
 
-Clone [pals-cpp](https://github.com/pals-project/pals-cpp) and [pals-julia](https://github.com/pals-project/pals-julia) in the same directory.  
+From same root directory, clone [pals-cpp](https://github.com/pals-project/pals-cpp) and [pals-julia](https://github.com/pals-project/pals-julia).  
 
 `src/pals.jl` contains all the functions for manipulating lattice files. It is a
 wrapper for the underlying C code contained in `pals-cpp/build/libyaml_c_wrapper.dylib`
